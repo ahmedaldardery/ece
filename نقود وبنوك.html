@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>امتحان نقود وبنوك</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        .question {
+            margin: 20px 0;
+        }
+        .question.correct {
+            color: green;
+        }
+        .question.wrong {
+            color: red;
+        }
+        #result {
+            font-weight: bold;
+            margin: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+        #timer {
+            font-size: 20px;
+            font-weight: bold;
+            color: #5b15ff;
+        }
+    </style>
+</head>
+<body>
+    <h1>امتحان نقود وبنوك</h1>
+
+    <!-- Form to input student name -->
+    <div id="name-form">
+        <label for="name">أدخل اسمك الثنائي:</label>
+        <input type="text" id="name" required>
+        <button onclick="startExam()">ابدأ الامتحان</button>
+    </div>
+
+    <!-- The exam form -->
+    <form id="exam-form" class="hidden">
+        <p>اسم الطالب: <span id="student-name"></span></p>
+        <div id="questions"></div>
+        <button type="button" onclick="submitExam()">إنهاء الاختبار</button>
+    </form>
+
+    <!-- Result after the exam -->
+    <div id="result" class="hidden"></div>
+
+    <!-- Timer -->
+    <div id="timer" class="hidden">الوقت المتبقي: 20:00</div>
+
+    <script>
+        const questions = [
+            { question: "ما هي وظيفة البنك المركزي؟", options: ["تنظيم النقود", "بيع المنتجات", "إدارة المصانع", "تحصيل الضرائب"], correct: 0 },
+            { question: "ما هو تعريف النقود؟", options: ["وسيلة تبادل", "أداة زراعة", "آلة صناعية", "وسيلة نقل"], correct: 0 },
+            { question: "ما هي فائدة النقد في الاقتصاد؟", options: ["تسهيل التبادل", "زيادة الضرائب", "تحقيق الأمان الاجتماعي", "تقليل الإنتاج"], correct: 0 },
+            { question: "ماذا يعني التضخم؟", options: ["زيادة الأسعار", "توزيع الثروات", "زيادة الإنتاج", "تقليل حجم العملة"], correct: 0 },
+            { question: "ما هو البنك التجاري؟", options: ["يقدم خدمات مالية للأفراد والشركات", "يتعامل مع النقد فقط", "يصدر العملات", "ينظم السياسات النقدية"], correct: 0 },
+        { question: "ما هي وظيفة البنك المركزي؟", options: ["تنظيم النقود", "بيع المنتجات", "إدارة المصانع", "تحصيل الضرائب"], correct: 0 },
+        
+    { question: "ما هي وظيفة البنك المركزي الرئيسية؟", options: ["إقراض الأفراد", "إصدار النقود وتنظيم السياسة النقدية", "فتح حسابات للشركات فقط"], answer: 1 },
+    { question: "ما هو التضخم؟", options: ["انخفاض الأسعار", "ارتفاع الأسعار بشكل عام", "ثبات الأسعار"], answer: 1 },
+    { question: "ما هو سعر الفائدة؟", options: ["تكلفة اقتراض المال", "قيمة العملة", "معدل الضرائب"], answer: 0 },
+    { question: "ما هي أنواع الحسابات البنكية الشائعة؟", options: ["حساب جاري، حساب توفير، حساب وديعة", "حساب أسهم، حساب سندات", "حساب تأمين، حساب تقاعد"], answer: 0 },
+    { question: "ما هو دور البنوك التجارية؟", options: ["إصدار النقود فقط", "قبول الودائع وتقديم القروض", "تنظيم سوق الأوراق المالية"], answer: 1 },
+    { question: "ما هي السياسة النقدية؟", options: ["سياسة الضرائب والإنفاق الحكومي", "إجراءات البنك المركزي للتحكم في عرض النقود والائتمان", "قوانين التجارة الدولية"], answer: 1 },
+    { question: "ما هو الاحتياطي الإلزامي؟", options: ["نسبة من الودائع يجب على البنوك الاحتفاظ بها لدى البنك المركزي", "مبلغ من المال يحتفظ به الأفراد في منازلهم", "قيمة الأصول التي تمتلكها البنوك"], answer: 0 },
+    { question: "ما هو دور سوق الأوراق المالية؟", options: ["شراء وبيع العملات الأجنبية فقط", "تداول الأسهم والسندات والأدوات المالية الأخرى", "تنظيم عمليات التجارة الدولية"], answer: 0 },
+    { question: "ما هي وظيفة الصراف الآلي (ATM)؟", options: ["إجراء عمليات السحب والإيداع والاستعلام عن الرصيد", "شراء وبيع الأسهم", "فتح حسابات بنكية جديدة"], answer: 0 },
+    { question: "ما هو القرض المصرفي؟", options: ["مبلغ من المال يقدمه البنك للأفراد أو الشركات مقابل فائدة", "مبلغ من المال يحتفظ به الأفراد في منازلهم", "نوع من أنواع الضرائب"], answer: 0 },
+    { question: "ما هو دور البنك المركزي في الرقابة على البنوك؟", options: ["تحديد أسعار الفائدة فقط", "الإشراف على أنشطة البنوك لضمان سلامة النظام المالي", "إقراض الأفراد مباشرة"], answer: 1 },
+    { question: "ما هي أهداف السياسة النقدية؟", options: ["تحقيق الاستقرار الاقتصادي، السيطرة على التضخم، دعم النمو الاقتصادي", "زيادة الضرائب فقط", "تحديد أسعار السلع"], answer: 0 },
+    { question: "ما هو مفهوم سعر الصرف؟", options: ["سعر الفائدة على القروض", "قيمة عملة بلد ما مقابل عملة بلد آخر", "معدل التضخم"], answer: 1 },
+    { question: "ما هي أنواع النقود؟", options: ["النقود المعدنية والورقية والودائع المصرفية", "الذهب فقط", "الأسهم والسندات"], answer: 0 },
+    { question: "ما هي وظيفة شركات التأمين؟", options: ["تقديم القروض المصرفية", "توفير الحماية المالية للأفراد والشركات ضد المخاطر", "إصدار النقود"], answer: 1 },
+    { question: "ما هو مفهوم الميزان التجاري؟", options: ["الفرق بين قيمة الصادرات والواردات", "مجموع الضرائب التي تجمعها الدولة", "قيمة الأصول التي تمتلكها الشركات"], answer: 0 },
+    { question: "ما هي أسباب التضخم؟", options: ["زيادة الطلب الكلي، ارتفاع تكاليف الإنتاج، زيادة عرض النقود", "انخفاض الضرائب فقط", "زيادة الصادرات"], answer: 0 },
+    { question: "ما هو دور المؤسسات المالية غير المصرفية؟", options: ["تقديم خدمات مالية متنوعة مثل التأمين والاستثمار والتمويل العقاري", "إصدار النقود فقط", "الرقابة على البنوك"], answer: 0 },
+    { question: "ما هو مفهوم الدين العام؟", options: ["مجموع القروض التي حصلت عليها الدولة", "مجموع الضرائب التي تجمعها الدولة", "قيمة الصادرات"], answer: 0 },
+    { question: "ما هي أدوات السياسة النقدية؟", options: ["سعر الفائدة، الاحتياطي الإلزامي، عمليات السوق المفتوحة", "الضرائب والإنفاق الحكومي", "قوانين التجارة"], answer: 0 },
+    
+   ]      
+
+        let studentName = "";
+        let score = 0;
+        let timeLeft = 20 * 60; // 20 دقيقة بالثواني
+        let timerInterval;
+
+        function startExam() {
+            const nameInput = document.getElementById("name").value.trim();
+            if (!nameInput) {
+                alert("يرجى إدخال اسمك الثنائي.");
+                return;
+            }
+
+            studentName = nameInput;
+            document.getElementById("student-name").textContent = studentName;
+            document.getElementById("name-form").classList.add("hidden");
+            document.getElementById("exam-form").classList.remove("hidden");
+            document.getElementById("timer").classList.remove("hidden");
+            loadQuestions();
+            startTimer();
+        }
+
+        function loadQuestions() {
+            const questionsDiv = document.getElementById("questions");
+            questions.forEach((q, index) => {
+                const questionDiv = document.createElement("div");
+                questionDiv.className = "question";
+                questionDiv.innerHTML = `
+                    <p>${index + 1}. ${q.question}</p>
+                    ${q.options.map((option, i) => `
+                        <label>
+                            <input type="radio" name="q${index}" value="${i}">
+                            ${option}
+                        </label><br>
+                    `).join("")}
+                `;
+                questionsDiv.appendChild(questionDiv);
+            });
+        }
+
+        function submitExam() {
+            clearInterval(timerInterval);
+            const questionsDiv = document.getElementById("questions");
+            const inputs = document.querySelectorAll("input[type=radio]:checked");
+            
+            if (inputs.length < questions.length) {
+                alert("يرجى الإجابة على جميع الأسئلة.");
+                return;
+            }
+
+            inputs.forEach(input => {
+                const questionIndex = input.name.slice(1); // Extract index from the name
+                const answerIndex = input.value;
+                const questionDiv = questionsDiv.children[questionIndex];
+
+                if (Number(answerIndex) === questions[questionIndex].correct) {
+                    questionDiv.classList.add("correct");
+                    score++;
+                } else {
+                    questionDiv.classList.add("wrong");
+                }
+            });
+
+            document.getElementById("exam-form").classList.add("hidden");
+            document.getElementById("result").classList.remove("hidden");
+            document.getElementById("result").textContent = `شكراً، ${studentName}. نتيجتك: ${score}/${questions.length}`;
+
+            // If time is over, show message
+            if (timeLeft <= 0) {
+                document.getElementById("result").textContent += " - حظاً أوفر المرة القادمة.";
+            }
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                document.getElementById("timer").textContent = `الوقت المتبقي: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    submitExam();
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
