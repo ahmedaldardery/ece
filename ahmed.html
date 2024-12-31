@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>تسجيل دخول وخروج الموظفين</title>
+    <style>
+        /* أنماط CSS بسيطة للتنسيق */
+        body { font-family: sans-serif; }
+        .container { width: 400px; margin: 0 auto; padding: 20px; border: 1px solid #ccc; }
+        label, input { display: block; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>تسجيل دخول وخروج الموظفين</h1>
+
+        <div id="login-form">
+            <h2>تسجيل الدخول</h2>
+            <input type="text" id="code" placeholder="كود الموظف">
+            <button id="show-data">عرض البيانات</button>
+
+            <h2>تسجيل دخول/خروج</h2>
+            <button id="clock-in">تسجيل دخول الآن</button>
+            <input type="datetime-local" id="clock-in-time">
+            <button id="clock-out">تسجيل خروج الآن</button>
+            <input type="datetime-local" id="clock-out-time">
+
+            <button id="register-employee">تسجيل موظف جديد</button>
+        </div>
+
+        <div id="employee-data" style="display:none;">
+            <h2 id="welcome-message"></h2>
+            <div id="attendance-records">
+                </div>
+            <p id="total-hours"></p>
+        </div>
+        <div id = "register-form" style="display:none;">
+          <h2>تسجيل موظف جديد</h2>
+          <input type="text" id="new-name" placeholder="اسم الموظف">
+          <input type="text" id="new-phone" placeholder="رقم الهاتف">
+          <button id="register">تسجيل</button>
+        </div>
+
+    </div>
+
+    <script>
+        // هنا سيوضع كود JavaScript
+        const showDataButton = document.getElementById('show-data');
+        const employeeData = document.getElementById('employee-data');
+        const loginForm = document.getElementById('login-form');
+        const registerEmployeeButton = document.getElementById('register-employee');
+        const registerForm = document.getElementById('register-form');
+
+        registerEmployeeButton.addEventListener('click', () => {
+          loginForm.style.display = "none";
+          registerForm.style.display = "block";
+        });
+        showDataButton.addEventListener('click', () => {
+            // هنا يجب جلب البيانات من قاعدة البيانات بناءً على الكود المدخل
+            // مثال بسيط (يجب استبدال هذا بجلب البيانات الحقيقية)
+            employeeData.style.display = "block";
+            loginForm.style.display = "none";
+            document.getElementById('welcome-message').textContent = "مرحباً، المستخدم (سيتم جلب الاسم من قاعدة البيانات)";
+            document.getElementById('attendance-records').innerHTML = "<p>لا توجد سجلات بعد.</p>";
+            document.getElementById('total-hours').textContent = "إجمالي الساعات: 0";
+
+        });
+    </script>
+</body>
+</html>
